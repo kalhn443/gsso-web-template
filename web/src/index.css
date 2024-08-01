@@ -1,0 +1,20 @@
+@import 'react-toastify/dist/ReactToastify.css';
+@import '@fontsource/ibm-plex-sans-thai/400.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html, body,span,p  {
+    font-family: "IBM Plex Sans Thai", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.Toastify__toast {
+    font-family: "IBM Plex Sans Thai", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    border-radius: 15px;
+}
+

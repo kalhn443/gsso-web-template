@@ -1,0 +1,21 @@
+### Send POST request with json body
+POST http://127.0.0.1:3010/api/user
+Content-Type: application/json
+
+{
+    "username": "kalhn443",
+    "email": "kalhn443@postbox.in.th",
+    "password": "2433",
+    "name": "kalhong narod"
+}
+
+
+
+### Send POST login with json body
+POST http://127.0.0.1:3010/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "kalhn443",
+    "password": "2433"
+}
