@@ -1,0 +1,7 @@
+.env
+.exe
+.db
+
+/bin
+/node_modules
+/dist
