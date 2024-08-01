@@ -27,7 +27,7 @@ export default function ModalViewService({isOpen,onClose,service}) {
 
                                     <div className="flex max-w-lg w-auto flex-wrap sm:flex-nowrap gap-4">
                                         <div className="flex flex-col gap-2 py-2 w-full">
-                                            <Snippet color="success" hideSymbol>
+                                            <Snippet color="success" variant="flat" hideSymbol>
                                                 <div className="max-w-full whitespace-pre-wrap break-words">
                                                     {JSON.stringify(convertServiceJson(service), null, 2)}
                                                 </div>

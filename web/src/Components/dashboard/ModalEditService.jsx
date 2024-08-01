@@ -127,7 +127,7 @@ export default function ModalEditService({isOpen,onClose,isAdmin = false,service
         if (e && e.preventDefault) {
             e.preventDefault();
         }
-        const API_BASE_URL = import.meta.env.DEV? 'http://127.0.0.1:3010': '';
+        const API_BASE_URL = import.meta.env.DEV? import.meta.env.VITE_API_BASE_URL: '';
         axios.put(`${API_BASE_URL}/api/service`, formData,{
             headers: {
                 'Authorization': 'Bearer '+Cookies.get('jwt'),
@@ -419,7 +419,7 @@ export default function ModalEditService({isOpen,onClose,isAdmin = false,service
                                                 บริการจาก &lt;#freetextTH=AIS&gt; รหัส OTP คือ &lt;#OTP&gt; (ref:&lt;#REF&gt;) จะหมดอายุใน &lt;#LIFETIMEOUT&gt; นาที และใช้ได้ถึง &lt;#EXPIRETIME&gt;
                                             </span>
                                                     </Snippet>
-                                                    <Snippet color="warning" disableCopy hideSymbol>
+                                                    <Snippet color="warning" hideCopyButton  hideSymbol >
                                             <span
                                                 className="text-small break-words  whitespace-normal overflow-wrap-normal">
                                                 บริการจาก AIS รหัส OTP คือ 248971 (ref:871253) จะหมดอายุใน 5 นาที และใช้ได้ถึง 17/07/2024 15:32:12
@@ -448,14 +448,14 @@ export default function ModalEditService({isOpen,onClose,isAdmin = false,service
                                                     SMS Delivery receipt
                                                 </Switch>
 
-                                                <Switch className="pt-1"
-                                                        isSelected={formData.operAis.waitDR === 'true'}
-                                                        type="checkbox"
-                                                        onValueChange={(isChecked) => handleChange('waitDR', isChecked, 'operAis')}
-                                                >
-                                                    Wait Dr <span className="text-small text-danger"> *GSSO จะรอ DR จาก SMPPGW ซึ่งใช้เวลา 4-10 นาที (แนะนำให้ปิด) </span>
+                                                {/*<Switch className="pt-1"*/}
+                                                {/*        isSelected={formData.operAis.waitDR === 'true'}*/}
+                                                {/*        type="checkbox"*/}
+                                                {/*        onValueChange={(isChecked) => handleChange('waitDR', isChecked, 'operAis')}*/}
+                                                {/*>*/}
+                                                {/*    Wait Dr <span className="text-small text-danger"> *GSSO จะรอ DR จาก SMPPGW ซึ่งใช้เวลา 4-10 นาที (แนะนำให้ปิด) </span>*/}
 
-                                                </Switch>
+                                                {/*</Switch>*/}
                                                 {isAdmin &&
                                                     <Switch className="pt-1"
                                                             isSelected={formData.operAis.refundFlag === 'true'}
@@ -568,7 +568,7 @@ export default function ModalEditService({isOpen,onClose,isAdmin = false,service
                                                 {"<p>บริการจาก <#freetextTH=AIS> รหัส OTP คือ <#OTP> จะหมดอายุใน <#LIFETIMEOUT> นาทีและใช้ได้ถึง <#EXPIRETIME> <p>&nbsp;</p> <p>Services from <#freetextENG=AIS> Password is <#OTP>. Password will be expired in <#LIFETIMEOUT> minutes."}
                                             </span>
                                                     </Snippet>
-                                                    <Snippet color="warning" hideSymbol disableCopy>
+                                                    <Snippet color="warning" hideSymbol hideCopyButton>
                                                         <p className="text-small break-words  whitespace-normal overflow-wrap-normal">
                                                             {"บริการจาก AIS รหัส OTP คือ 161824 จะหมดอายุใน 5 นาทีและใช้ได้ถึง 19/07/2024 15:19:42\n\n"}
                                                         </p>
@@ -701,14 +701,14 @@ export default function ModalEditService({isOpen,onClose,isAdmin = false,service
                                                     SMS Delivery receipt
                                                 </Switch>
 
-                                                <Switch className="pt-1"
-                                                        isSelected={formData.operNonAis.waitDR ==='true'}
-                                                        type="checkbox"
-                                                        onValueChange={(isChecked) => handleChange('waitDR', isChecked,'operNonAis')}
-                                                >
-                                                    Wait Dr <span className="text-small text-danger"> *GSSO จะรอ DR จาก SMPPGW ซึ่งใช้เวลา 4-10 นาที (แนะนำให้ปิด) </span>
+                                                {/*<Switch className="pt-1"*/}
+                                                {/*        isSelected={formData.operNonAis.waitDR ==='true'}*/}
+                                                {/*        type="checkbox"*/}
+                                                {/*        onValueChange={(isChecked) => handleChange('waitDR', isChecked,'operNonAis')}*/}
+                                                {/*>*/}
+                                                {/*    Wait Dr <span className="text-small text-danger"> *GSSO จะรอ DR จาก SMPPGW ซึ่งใช้เวลา 4-10 นาที (แนะนำให้ปิด) </span>*/}
 
-                                                </Switch>
+                                                {/*</Switch>*/}
                                                 {isAdmin &&
                                                     <Switch className="pt-1"
                                                             isSelected={formData.operNonAis.refundFlag==='true'}
@@ -883,14 +883,14 @@ export default function ModalEditService({isOpen,onClose,isAdmin = false,service
                                                     SMS Delivery receipt
                                                 </Switch>
 
-                                                <Switch className="pt-1"
-                                                        isSelected={formData.operInter.waitDR==='true'}
-                                                        type="checkbox"
-                                                        onValueChange={(isChecked) => handleChange('waitDR', isChecked,'operInter')}
-                                                >
-                                                    Wait Dr <span className="text-small text-danger"> *GSSO จะรอ DR จาก SMPPGW ซึ่งใช้เวลา 4-10 นาที (แนะนำให้ปิด) </span>
+                                                {/*<Switch className="pt-1"*/}
+                                                {/*        isSelected={formData.operInter.waitDR==='true'}*/}
+                                                {/*        type="checkbox"*/}
+                                                {/*        onValueChange={(isChecked) => handleChange('waitDR', isChecked,'operInter')}*/}
+                                                {/*>*/}
+                                                {/*    Wait Dr <span className="text-small text-danger"> *GSSO จะรอ DR จาก SMPPGW ซึ่งใช้เวลา 4-10 นาที (แนะนำให้ปิด) </span>*/}
 
-                                                </Switch>
+                                                {/*</Switch>*/}
                                                 {isAdmin &&
                                                     <Switch className="pt-1"
                                                             isSelected={formData.operInter.refundFlag==='true'}
@@ -981,9 +981,9 @@ export default function ModalEditService({isOpen,onClose,isAdmin = false,service
                                     }
                                     <div
                                         className="flex flex-row items-center justify-center  max-w-lg w-full flex-wrap sm:flex-nowrap  py-4 gap-4 ">
-                                        <Button color="danger" variant="light" onPress={show}>
-                                            console
-                                        </Button>
+                                        {/*<Button color="danger" variant="light" onPress={show}>*/}
+                                        {/*    console*/}
+                                        {/*</Button>*/}
                                         <Button color="danger" variant="light" onPress={onClose}>
                                             Close
                                         </Button>

@@ -63,10 +63,8 @@ export default function Dashboard({setUserName}) {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        const API_BASE_URL = import.meta.env.DEV
-            ? 'http://127.0.0.1:3010'
-            : '';
-       //axios.get('http://127.0.0.1:3010/api/service', {
+        const API_BASE_URL = import.meta.env.DEV? import.meta.env.VITE_API_BASE_URL: '';
+
        axios.get(`${API_BASE_URL}/api/service`, {
             headers: {
                 'Authorization': 'Bearer '+Cookies.get('jwt'),

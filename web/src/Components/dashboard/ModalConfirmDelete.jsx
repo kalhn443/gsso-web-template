@@ -13,7 +13,7 @@ export default function ModalConfirmDelete({ isOpen, onClose, service,setService
         if (e && e.preventDefault) {
             e.preventDefault();
         }
-        const API_BASE_URL = import.meta.env.DEV? 'http://127.0.0.1:3010': '';
+        const API_BASE_URL = import.meta.env.DEV? import.meta.env.VITE_API_BASE_URL: '';
         axios.delete(`${API_BASE_URL}/api/service/${service.ID}`, {
             headers: {
                 'Authorization': 'Bearer '+Cookies.get('jwt'),

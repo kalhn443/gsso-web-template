@@ -19,12 +19,18 @@ export function LoginComponent() {
     const [loading, setLoading] = React.useState(false);
     const [loginMsg, setLoginMsg] = React.useState('Login');
 
+
+    const API_BASE_URL = import.meta.env.DEV? import.meta.env.VITE_API_BASE_URL: '';
+
+
+
     const handleSubmitLogin = async (e) => {
+        console.log( import.meta.env)
+
         setLoading(true)
         setLoginMsg('Loading')
         e.preventDefault();
         {
-           // axios.post('http://127.0.0.1:3010/api/auth/login', { identity, password })
             axios.post(`${API_BASE_URL}/api/auth/login`, { identity, password })
                 .then(async response => {
 
@@ -51,23 +57,7 @@ export function LoginComponent() {
                 });
         }
 
-        // try {
-        //     const response = await axios.post('http://127.0.0.1:3010/api/auth/login', { identity, password });
-        //     //const response = await axios.post('/api/auth/login', { identity, password });
-        //     setLoading(false)
-        //     setLoginMsg('Login')
-        //     if ("success" === response.data?.status)navigate('/')
-        //     setLoginError(true)
-        //     setLoginErrorMsg('Login error : Internal server error')
-        // } catch (error) {
-        //     setLoading(false)
-        //     setLoginMsg('Login')
-        //     setLoginError(true)
-        //     setLoginErrorMsg('Login error : '+ error.message)
-        //     if (401 === error.response.status ){
-        //         setLoginErrorMsg('Login error :Wrong user or password')
-        //     }
-        // }
+
     };
 
 
@@ -98,16 +88,13 @@ export function LoginComponent() {
         return regisPassword !== confirmPassword
     }, [regisPassword,confirmPassword]);
 
-    const API_BASE_URL = import.meta.env.DEV? 'http://127.0.0.1:8088': '';
 
     const handleSubmitRegister = async (e) => {
         e.preventDefault();
         setRegisLoading(true)
         setRegisMsg('Loading')
 
-
         axios.post(`${API_BASE_URL}/api/user`, { username,email, "password":confirmPassword })
-            //axios.post('/api/auth/login', { identity, password })
             .then(async response => {
 
                 if ("success" === response.data?.status) {
@@ -130,8 +117,6 @@ export function LoginComponent() {
                     setRegisError(true)
                     setRegisErrorMsg('Sign up error : '+ error.message)
             });
-
-
 
     };
 
