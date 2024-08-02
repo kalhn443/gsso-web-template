@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
     Table,
     TableHeader,
@@ -13,7 +13,7 @@ import {
     DropdownMenu,
     DropdownItem,
     Chip,
-    Pagination, CircularProgress, Avatar, cn,
+    Pagination, CircularProgress, Avatar, cn, Image,
 } from "@nextui-org/react";
 import {VerticalDotsIcon} from "../../assets/icons/VerticalDotsIcon.jsx";
 import {SearchIcon} from "../../assets/icons/SearchIcon.jsx";
@@ -36,6 +36,10 @@ import {ServiceIcon} from "../../assets/AcmeLogo.jsx";
 import {Logo} from "../../assets/icons/service.jsx";
 import {CustomIcon} from "../../assets/icons/CustomIcon.jsx";
 import ModalViewService from "./ModalViewService.jsx";
+import {PlusIcon} from "../../assets/icons/PlusIcon.jsx";
+import ModalUpload from "./ModalUpload.jsx";
+import NavbarComponent from "../navbar/NavbarComponent.jsx";
+import ImgServerError from "../../assets/500.svg";
 
 const statusColorMap = {
     active: "success",
@@ -56,15 +60,17 @@ const INITIAL_VISIBLE_COLUMNS = ["ID","serviceId","serviceName", "projectSite", 
 
 
 // eslint-disable-next-line react/prop-types
-export default function Dashboard({setUserName}) {
+export default function Dashboard() {
     const [services, setServices] = React.useState(new Set([]));
     const [loading, setLoading] = React.useState(true);
     const [isAdmin, setIsAdmin] = React.useState(false);
+    const [userName, setUserName] = useState("guest");
+    const [isServerError, setServerError] = useState(true);
+
     const navigate = useNavigate();
 
     React.useEffect(() => {
         const API_BASE_URL = import.meta.env.DEV? import.meta.env.VITE_API_BASE_URL: '';
-
        axios.get(`${API_BASE_URL}/api/service`, {
             headers: {
                 'Authorization': 'Bearer '+Cookies.get('jwt'),
@@ -76,13 +82,19 @@ export default function Dashboard({setUserName}) {
                 setServices(response.data?.services? response.data.services : new Set([]))
                 setUserName( response.data?.user?.username)
                 //setServices(response.data.services);
+                setServerError(false)
                 setLoading(false);
                 setIsAdmin(response.data?.isAdmin)
             })
             .catch(error => {
                 setLoading(false);
+                setServerError(true);
                 console.error('เกิดข้อผิดพลาด:', error.message);
-                if (404 !== error.response.status ){
+
+                if (404 === error.response?.status ){
+                    setServerError(false);
+                }else if (401 === error.response?.status){
+                    setServerError(false);
                     navigate('/login');
                 }
 
@@ -349,6 +361,12 @@ export default function Dashboard({setUserName}) {
                                 ))}
                             </DropdownMenu>
                         </Dropdown>
+                        { isAdmin && <ModalUpload/>
+                        }
+                        <Button   color="success" className="text-white" variant="shadow" endContent={<DownloadIcon /> }>
+                            Download T16
+                        </Button>
+
                         {/*<ModalNewService setServices={setServices} />*/}
                     </div>
                 </div>
@@ -430,53 +448,99 @@ export default function Dashboard({setUserName}) {
 
 
 
-    if (loading) return (<div className="flex justify-center items-center py-16"><CircularProgress label="Loading..." /></div> );
+    if (loading) return (
+        <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center">
+                <CircularProgress label="Loading..."/>
+            </div>
+        </div>
+    );
 
 
     return (
-        <Card className="p-6">
-        <Table
-            isCompact
-            removeWrapper
-            aria-label="Example table with custom cells, pagination and sorting"
-            isHeaderSticky
-            bottomContent={bottomContent}
-            bottomContentPlacement="outside"
-            classNames={{
-                wrapper: "max-h-[382px]",
-            }}
-            selectedKeys={selectedKeys}
-            selectionMode="none"
-            sortDescriptor={sortDescriptor}
-            topContent={topContent}
-            topContentPlacement="outside"
-            onSelectionChange={setSelectedKeys}
-            onSortChange={setSortDescriptor}
-        >
-            <TableHeader columns={headerColumns}>
-                {(column) => (
-                    <TableColumn
-                        key={column.uid}
-                        align={column.uid === "actions" ? "center" : "start"}
-                        allowsSorting={column.sortable}
-                    >
-                        {column.name}
-                    </TableColumn>
-                )}
-            </TableHeader>
-            <TableBody emptyContent={"Service not found"} items={items} >
-                {(item) => (
-                    <TableRow key={item.ID}>
-                        {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-                    </TableRow>
-                )}
-            </TableBody>
-        </Table>
 
-        <ModalViewService isOpen={modalView.isOpen} onClose={modalView.onClose} service={selectedService}  />
-        <ModalEditService isOpen={isOpen} onClose={onClose} isAdmin={isAdmin} service={selectedService} setServices={setServices} />
-        <ModalConfirmDelete isOpen={modalDel.isOpen} onClose={modalDel.onClose} service={selectedService} setServices={setServices} />
-        </Card>
+        <>
+            {isServerError && (
+                <div className="flex items-center justify-center h-screen">
+                    <div className="container mx-auto max-w-lg ">
+                        <Image
+                            width="100%"
+                            height="100%"
+                            alt="NextUI hero Image"
+                            src={ImgServerError}
+                        />
+                    </div>
+                </div>
+            )}
+            {!isServerError && (
+                <div>
+                    <NavbarComponent userName={userName} />
+                    <main className="container mx-auto max-w-7xl py-16  px-6 flex-grow">
+                        <Card className="p-6">
+                            <Table
+                                isCompact
+                                removeWrapper
+                                aria-label="Example table with custom cells, pagination and sorting"
+                                isHeaderSticky
+                                bottomContent={bottomContent}
+                                bottomContentPlacement="outside"
+                                classNames={{
+                                    wrapper: "max-h-[382px]",
+                                }}
+                                selectedKeys={selectedKeys}
+                                selectionMode="none"
+                                sortDescriptor={sortDescriptor}
+                                topContent={topContent}
+                                topContentPlacement="outside"
+                                onSelectionChange={setSelectedKeys}
+                                onSortChange={setSortDescriptor}
+                            >
+                                <TableHeader columns={headerColumns}>
+                                    {(column) => (
+                                        <TableColumn
+                                            key={column.uid}
+                                            align={column.uid === "actions" ? "center" : "start"}
+                                            allowsSorting={column.sortable}
+                                        >
+                                            {column.name}
+                                        </TableColumn>
+                                    )}
+                                </TableHeader>
+                                <TableBody emptyContent={"Service not found"} items={items}>
+                                    {(item) => (
+                                        <TableRow key={item.ID}>
+                                            {(columnKey) => (
+                                                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                                            )}
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+
+                            <ModalViewService
+                                isOpen={modalView.isOpen}
+                                onClose={modalView.onClose}
+                                service={selectedService}
+                            />
+                            <ModalEditService
+                                isOpen={isOpen}
+                                onClose={onClose}
+                                isAdmin={isAdmin}
+                                service={selectedService}
+                                setServices={setServices}
+                            />
+                            <ModalConfirmDelete
+                                isOpen={modalDel.isOpen}
+                                onClose={modalDel.onClose}
+                                service={selectedService}
+                                setServices={setServices}
+                            />
+                        </Card>
+                    </main>
+                </div>
+            )}
+        </>
+
     );
 }
 

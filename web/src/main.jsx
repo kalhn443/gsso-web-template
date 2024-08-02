@@ -5,6 +5,8 @@ import './index.css'
 import {createBrowserRouter,RouterProvider} from "react-router-dom";
 import {LoginComponent} from "./Components/login/LoginComponent.jsx";
 import {ToastContainer} from "react-toastify";
+import {NotfoundComponent} from "./Components/404/NotfoundComponent.jsx";
+import {RegisterComponent} from "./Components/register/RegisterComponent.jsx";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -13,6 +15,14 @@ const router = createBrowserRouter([
     {
         path: "login",
         element: <LoginComponent/>
+    },
+    {
+        path: "register",
+        element: <RegisterComponent/>
+    },
+    {
+        path: "*",
+        element: <NotfoundComponent/>
     },
 ]);
 

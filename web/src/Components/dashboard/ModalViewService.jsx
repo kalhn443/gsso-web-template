@@ -15,7 +15,7 @@ export default function ModalViewService({isOpen,onClose,service}) {
 
             <Modal isOpen={isOpen}
                    onClose={onClose}
-                   scrollBehavior="outside" size="3xl" backdrop="blur" className="relative flex min-h-dvh flex-col py-4">
+                   scrollBehavior="outside" size="2xl" backdrop="blur" className="relative flex min-h-dvh flex-col py-4">
                 <ModalContent>
                     {(onClose) => (
                         <>
