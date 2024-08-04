@@ -1,23 +1,23 @@
 import { saveAs } from "file-saver";
 
-
 export function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-
 function htmlEscape(str) {
   return str
-      .replace(/&/g, '&amp;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
-
 export function convertServiceToString(service) {
-  const template = '<t>ServiceTemplate</t><0>0</0><1>'+service.serviceName+ '</1><2>def</2><3>def</3><4>def</4><d>';
+  const template =
+    "<t>ServiceTemplate</t><0>0</0><1>" +
+    service.serviceName +
+    "</1><2>def</2><3>def</3><4>def</4><d>";
 
   // const operatorData = service.allowOperation.map(oper => (
   //   {oper,
@@ -35,9 +35,9 @@ export function convertServiceToString(service) {
   //   lifeTimeoutMins: service.lifeTimeoutMins,
   //   seedkey: service.seedKey
   // }));
-  const operatorData = service.allowOperation.map(oper => {
+  const operatorData = service.allowOperation.map((oper) => {
     let operData;
-    switch(oper) {
+    switch (oper) {
       case "AIS":
         operData = service.operAis;
         break;
@@ -57,31 +57,32 @@ export function convertServiceToString(service) {
       smsSender: operData.smsSender,
       smsBodyThai: operData.smsThai,
       smsBodyEng: operData.smsEng,
-      emailFrom: operData.emailFrom,
-      emailSubject: operData.emailSubject,
-      emailBody: operData.emailBody,
-      smscDeliveryReceipt: operData.smscDeliveryReceipt.toString().toUpperCase(),
+      emailFrom: operData.emailFrom || "AIS@ais.co.th",
+      emailSubject: operData.emailSubject || "-",
+      emailBody: operData.emailBody || "-",
+      smscDeliveryReceipt: operData.smscDeliveryReceipt
+        .toString()
+        .toUpperCase(),
       waitDR: operData.waitDR.toString().toUpperCase(),
       otpDigit: operData.otpDigit,
       refDigit: operData.referenceDigit,
       lifeTimeoutMins: operData.lifeTimeoutMins,
       seedkey: operData.seedKey,
       refundFlag: operData.refundFlag.toString().toUpperCase(),
-      state: operData.state || undefined // เพิ่ม state สำหรับ AIS, ถ้าไม่มีให้เป็น array ว่าง
+      state: operData.state || undefined, // เพิ่ม state สำหรับ AIS, ถ้าไม่มีให้เป็น array ว่าง
     };
   });
 
-
-  const dataService = `"${service.serviceId}",${JSON.stringify(operatorData)}`
+  const dataService = `"${service.serviceId}",${JSON.stringify(operatorData)}`;
   const escapedDataString = htmlEscape(dataService);
 
-  return template + escapedDataString + '</d>';
+  return template + escapedDataString + "</d>";
 }
 
 export function convertServiceJson(service) {
-  const operatorData = service.allowOperation.map(oper => {
+  const operatorData = service.allowOperation.map((oper) => {
     let operData;
-    switch(oper) {
+    switch (oper) {
       case "AIS":
         operData = service.operAis;
         break;
@@ -101,27 +102,26 @@ export function convertServiceJson(service) {
       smsSender: operData.smsSender,
       smsBodyThai: operData.smsThai,
       smsBodyEng: operData.smsEng,
-      emailFrom: operData.emailFrom,
-      emailSubject: operData.emailSubject,
-      emailBody: operData.emailBody,
-      smscDeliveryReceipt: operData.smscDeliveryReceipt.toString().toUpperCase(),
+      emailFrom: operData.emailFrom || "AIS@ais.co.th",
+      emailSubject: operData.emailSubject || "-",
+      emailBody: operData.emailBody || "-",
+      smscDeliveryReceipt: operData.smscDeliveryReceipt
+        .toString()
+        .toUpperCase(),
       waitDR: operData.waitDR.toString().toUpperCase(),
       otpDigit: operData.otpDigit,
       refDigit: operData.referenceDigit,
       lifeTimeoutMins: operData.lifeTimeoutMins,
       seedkey: operData.seedKey,
       refundFlag: operData.refundFlag.toString().toUpperCase(),
-      state: operData.state || undefined // เพิ่ม state สำหรับ AIS, ถ้าไม่มีให้เป็น array ว่าง
+      state: operData.state || undefined, // เพิ่ม state สำหรับ AIS, ถ้าไม่มีให้เป็น array ว่าง
     };
   });
 
-  return operatorData
-
+  return operatorData;
 }
 
-
-export function  exportTextFile (fileName,text){
+export function exportTextFile(fileName, text) {
   const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-  saveAs(blob, fileName+".xml");
-
+  saveAs(blob, fileName + ".xml");
 }

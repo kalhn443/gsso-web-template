@@ -16,7 +16,9 @@ func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api", logger.New())
 	api.Get("/", handler.Hello)
 
-	api.Post("/upload", handler.UploadFile)
+	file := api.Group("/file")
+	file.Get("/download", handler.DownloadFile)
+	file.Post("/upload", handler.UploadFile)
 
 	// Auth
 	auth := api.Group("/auth")
@@ -38,9 +40,9 @@ func SetupRoutes(app *fiber.App) {
 	product.Delete("/:id", middleware.Protected(), handler.DeleteService)
 
 	//app.Static("/*", "./dist")
+	app.Static("/doc", "./doc")
 
 	app.Static("/", "./dist")
-
 	//app.Static("/assets", "./dist/assets")
 	app.Static("/*", "./dist")
 
