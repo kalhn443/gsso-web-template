@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api-fiber-gorm/config"
 	"api-fiber-gorm/database"
 	"api-fiber-gorm/router"
 	"log"
@@ -12,12 +13,12 @@ import (
 func main() {
 	app := fiber.New()
 	app.Use(cors.New(cors.Config{
-		AllowHeaders:  "Origin, Content-Type, Accept, Content-Disposition, X-Filename",
+		AllowHeaders:  "*",
 		ExposeHeaders: "Content-Disposition, X-Filename",
 	}))
 
 	database.ConnectDB()
 
 	router.SetupRoutes(app)
-	log.Fatal(app.Listen(":8088"))
+	log.Fatal(app.Listen(":" + config.Config("SERVER_PORT_LISTEN")))
 }

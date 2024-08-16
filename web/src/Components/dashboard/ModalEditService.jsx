@@ -208,6 +208,7 @@ export default function ModalEditService({
                       isRequired
                       isDisabled={!isAdmin}
                       size="md"
+                      color={formData.projectSite ? "success" : "danger"}
                       placeholder="VAS for AIS-PLAY only"
                       name="projectSite"
                       selectedKeys={
@@ -545,14 +546,23 @@ export default function ModalEditService({
                           SMS Delivery receipt
                         </Switch>
 
-                        {/*<Switch className="pt-1"*/}
-                        {/*        isSelected={formData.operAis.waitDR === 'true'}*/}
-                        {/*        type="checkbox"*/}
-                        {/*        onValueChange={(isChecked) => handleChange('waitDR', isChecked, 'operAis')}*/}
-                        {/*>*/}
-                        {/*    Wait Dr <span className="text-small text-danger"> *GSSO จะรอ DR จาก SMPPGW ซึ่งใช้เวลา 4-10 นาที (แนะนำให้ปิด) </span>*/}
-
-                        {/*</Switch>*/}
+                        {isAdmin && (
+                          <Switch
+                            className="pt-1"
+                            isSelected={formData.operAis.waitDR === "true"}
+                            type="checkbox"
+                            onValueChange={(isChecked) =>
+                              handleChange("waitDR", isChecked, "operAis")
+                            }
+                          >
+                            Wait Dr{" "}
+                            <span className="text-small text-danger">
+                              {" "}
+                              *GSSO จะรอ DR จาก SMPPGW ซึ่งใช้เวลา 4-10 นาที
+                              (แนะนำให้ปิด){" "}
+                            </span>
+                          </Switch>
+                        )}
                         {isAdmin && (
                           <Switch
                             className="pt-1"
@@ -904,31 +914,40 @@ export default function ModalEditService({
                           SMS Delivery receipt
                         </Switch>
 
-                        {/*<Switch className="pt-1"*/}
-                        {/*        isSelected={formData.operNonAis.waitDR ==='true'}*/}
-                        {/*        type="checkbox"*/}
-                        {/*        onValueChange={(isChecked) => handleChange('waitDR', isChecked,'operNonAis')}*/}
-                        {/*>*/}
-                        {/*    Wait Dr <span className="text-small text-danger"> *GSSO จะรอ DR จาก SMPPGW ซึ่งใช้เวลา 4-10 นาที (แนะนำให้ปิด) </span>*/}
-
-                        {/*</Switch>*/}
                         {isAdmin && (
-                          <Switch
-                            className="pt-1"
-                            isSelected={
-                              formData.operNonAis.refundFlag === "true"
-                            }
-                            type="checkbox"
-                            onValueChange={(isChecked) =>
-                              handleChange(
-                                "refundFlag",
-                                isChecked,
-                                "operNonAis",
-                              )
-                            }
-                          >
-                            Refund Flag
-                          </Switch>
+                          <>
+                            <Switch
+                              className="pt-1"
+                              isSelected={formData.operNonAis.waitDR === "true"}
+                              type="checkbox"
+                              onValueChange={(isChecked) =>
+                                handleChange("waitDR", isChecked, "operNonAis")
+                              }
+                            >
+                              Wait Dr{" "}
+                              <span className="text-small text-danger">
+                                {" "}
+                                *GSSO จะรอ DR จาก SMPPGW ซึ่งใช้เวลา 4-10 นาที
+                                (แนะนำให้ปิด){" "}
+                              </span>
+                            </Switch>
+                            <Switch
+                              className="pt-1"
+                              isSelected={
+                                formData.operNonAis.refundFlag === "true"
+                              }
+                              type="checkbox"
+                              onValueChange={(isChecked) =>
+                                handleChange(
+                                  "refundFlag",
+                                  isChecked,
+                                  "operNonAis",
+                                )
+                              }
+                            >
+                              Refund Flag
+                            </Switch>
+                          </>
                         )}
                         {/*<p className="text-small text-danger pb-2"*/}
                         {/*   color="danger"> **/}
@@ -1194,27 +1213,40 @@ export default function ModalEditService({
                           SMS Delivery receipt
                         </Switch>
 
-                        {/*<Switch className="pt-1"*/}
-                        {/*        isSelected={formData.operInter.waitDR==='true'}*/}
-                        {/*        type="checkbox"*/}
-                        {/*        onValueChange={(isChecked) => handleChange('waitDR', isChecked,'operInter')}*/}
-                        {/*>*/}
-                        {/*    Wait Dr <span className="text-small text-danger"> *GSSO จะรอ DR จาก SMPPGW ซึ่งใช้เวลา 4-10 นาที (แนะนำให้ปิด) </span>*/}
-
-                        {/*</Switch>*/}
                         {isAdmin && (
-                          <Switch
-                            className="pt-1"
-                            isSelected={
-                              formData.operInter.refundFlag === "true"
-                            }
-                            type="checkbox"
-                            onValueChange={(isChecked) =>
-                              handleChange("refundFlag", isChecked, "operInter")
-                            }
-                          >
-                            Refund Flag
-                          </Switch>
+                          <>
+                            <Switch
+                              className="pt-1"
+                              isSelected={formData.operInter.waitDR === "true"}
+                              type="checkbox"
+                              onValueChange={(isChecked) =>
+                                handleChange("waitDR", isChecked, "operInter")
+                              }
+                            >
+                              Wait Dr{" "}
+                              <span className="text-small text-danger">
+                                {" "}
+                                *GSSO จะรอ DR จาก SMPPGW ซึ่งใช้เวลา 4-10 นาที
+                                (แนะนำให้ปิด){" "}
+                              </span>
+                            </Switch>
+                            <Switch
+                              className="pt-1"
+                              isSelected={
+                                formData.operInter.refundFlag === "true"
+                              }
+                              type="checkbox"
+                              onValueChange={(isChecked) =>
+                                handleChange(
+                                  "refundFlag",
+                                  isChecked,
+                                  "operInter",
+                                )
+                              }
+                            >
+                              Refund Flag
+                            </Switch>
+                          </>
                         )}
                         {/*<p className="text-small text-danger pb-2"*/}
                         {/*   color="danger"> **/}

@@ -92,6 +92,8 @@ func Login(c *fiber.Ctx) error {
 	claims["username"] = userModel.Username
 	claims["user_id"] = userModel.ID
 	claims["email"] = userModel.Email
+	claims["mobile"] = userModel.Mobile
+	claims["emailLead"] = userModel.EmailLead
 	claims["role"] = userModel.Role
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 

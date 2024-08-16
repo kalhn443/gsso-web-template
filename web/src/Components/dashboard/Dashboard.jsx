@@ -33,7 +33,6 @@ import { capitalize, convertServiceToString, exportTextFile } from "./utils.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@nextui-org/card";
-import { HeartIcon } from "../../assets/icons/HeartIcon.jsx";
 import { EditDocumentIcon } from "../../assets/icons/EditDocumentIcon.jsx";
 import { DeleteDocumentIcon } from "../../assets/icons/DeleteDocumentIcon.jsx";
 import { EyeIcon } from "../../assets/icons/EyeIcon.jsx";
@@ -42,17 +41,16 @@ import { useDisclosure } from "@nextui-org/modal";
 import { DownloadIcon } from "../../assets/icons/DownloadIcon.jsx";
 import Cookies from "js-cookie";
 import ModalConfirmDelete from "./ModalConfirmDelete.jsx";
-import { ServiceIcon } from "../../assets/AcmeLogo.jsx";
-import { Logo } from "../../assets/icons/service.jsx";
 import { CustomIcon } from "../../assets/icons/CustomIcon.jsx";
 import ModalViewService from "./ModalViewService.jsx";
-import { PlusIcon } from "../../assets/icons/PlusIcon.jsx";
 import ModalUpload from "./ModalUpload.jsx";
 import NavbarComponent from "../navbar/NavbarComponent.jsx";
-import ImgServerError from "../../assets/500.svg";
 import DownloadComponents from "./DownloadComponent.jsx";
 import { ServerErrorComponent } from "../500/ServerErrorComponent.jsx";
 import { ProvisioningIcon } from "../../assets/icons/ProvisioningIcon.jsx";
+import ModalViewProfile from "../profile/ModalViewProfile.jsx";
+import { toast } from "react-toastify";
+import ModalProvLoading from "../loading/LoadingComponent.jsx";
 
 const statusColorMap = {
   active: "success",
@@ -84,7 +82,7 @@ export default function Dashboard() {
   const [services, setServices] = React.useState(new Set([]));
   const [loading, setLoading] = React.useState(true);
   const [isAdmin, setIsAdmin] = React.useState(false);
-  const [userName, setUserName] = useState("guest");
+  const [userLongin, setUserLongin] = useState("guest");
   const [isServerError, setServerError] = useState(true);
 
   const navigate = useNavigate();
@@ -105,7 +103,7 @@ export default function Dashboard() {
         setServices(
           response.data?.services ? response.data.services : new Set([]),
         );
-        setUserName(response.data?.user?.username);
+        setUserLongin(response.data?.user);
         //setServices(response.data.services);
         setServerError(false);
         setLoading(false);
@@ -206,14 +204,25 @@ export default function Dashboard() {
         case "serviceId":
           return (
             <div className="flex items-center gap-2">
-              <Avatar
-                icon={<CustomIcon />}
-                classNames={{
-                  base: avatarColorMap[service.projectSite],
-                  icon: "text-white",
-                  // icon: "text-black/80",
-                }}
-              />
+              <Button
+                isIconOnly
+                // color={avatarColorMap[service.projectSite]}
+                aria-label="Like"
+                radius="full"
+                onPress={() => handleView(service)}
+              >
+                {/*<CustomIcon />*/}
+                <Avatar
+                  icon={<CustomIcon />}
+                  classNames={{
+                    base: avatarColorMap[service.projectSite],
+                    icon: "text-white",
+                    // icon: "text-black/80",
+                  }}
+                  // as={"button"}
+                />
+              </Button>
+
               <div className="flex flex-col">
                 <p className="text-bold text-small capitalize">{cellValue}</p>
                 <p className="text-bold text-tiny capitalize text-default-400">
@@ -271,6 +280,17 @@ export default function Dashboard() {
                     View
                   </DropdownItem>
                   <DropdownItem
+                    key="edit"
+                    startContent={
+                      <EditDocumentIcon
+                        className={cn(iconClasses, "text-success-800")}
+                      />
+                    }
+                    onPress={() => handleEdit(service)}
+                  >
+                    Edit
+                  </DropdownItem>
+                  <DropdownItem
                     key="Download"
                     startContent={
                       <DownloadIcon
@@ -287,17 +307,6 @@ export default function Dashboard() {
                     Download
                   </DropdownItem>
 
-                  <DropdownItem
-                    key="edit"
-                    startContent={
-                      <EditDocumentIcon
-                        className={cn(iconClasses, "text-success-800")}
-                      />
-                    }
-                    onPress={() => handleEdit(service)}
-                  >
-                    Edit
-                  </DropdownItem>
                   {isAdmin && (
                     <DropdownItem
                       key="provisioning"
@@ -307,7 +316,7 @@ export default function Dashboard() {
                           className={cn(iconClasses, "text-primary-400")}
                         />
                       }
-                      onPress={() => console.log("Provisioning")}
+                      onPress={() => handleProvisioning(service)}
                     >
                       Provisioning
                     </DropdownItem>
@@ -335,7 +344,7 @@ export default function Dashboard() {
               <>
                 {cellValue.split(",").map((item, index, array) => (
                   <React.Fragment key={item}>
-                    <Link as="button" onPress={() => console.log(item)}>
+                    <Link as="button" onPress={() => handleViewProfile(item)}>
                       {item}
                     </Link>
                     {index < array.length - 1 && " "}
@@ -567,6 +576,68 @@ export default function Dashboard() {
     //
   };
 
+  const [userView, setUserView] = useState();
+  const modalViewProfile = useDisclosure();
+  const handleViewProfile = (user) => {
+    axios
+      .get(`${API_BASE_URL}/api/user/${user}`, {
+        headers: {
+          Authorization: "Bearer " + Cookies.get("jwt"),
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        setUserView(response.data?.data);
+        modalViewProfile.onOpen();
+      })
+      .catch((error) => {
+        console.error("เกิดข้อผิดพลาด:", error.message);
+      });
+  };
+
+  const modalProvLoading = useDisclosure();
+
+  const handleProvisioning = async (service) => {
+    const jwtToken = Cookies.get("jwt");
+    if (!jwtToken) {
+      toast.error("Authentication token not found", { autoClose: 2500 });
+      return;
+    }
+
+    const data = convertServiceToString(service);
+
+    try {
+      modalProvLoading.onOpen();
+
+      const response = await axios.post(
+        `${API_BASE_URL}/api/file/prov`,
+        {
+          site: service.projectSite,
+          serviceId: service.serviceId,
+          data,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      modalProvLoading.onClose();
+
+      if (response.data?.status === "success") {
+        toast.success("E01 Provided!", { autoClose: 1500 });
+      } else {
+        toast.warn("Unexpected response from server", { autoClose: 2500 });
+      }
+    } catch (error) {
+      modalProvLoading.onClose();
+
+      console.error("Provisioning error:", error);
+      toast.error("E01 Provision Failure", { autoClose: 2500 });
+    }
+  };
+
   if (loading)
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -581,7 +652,7 @@ export default function Dashboard() {
       {isServerError && <ServerErrorComponent />}
       {!isServerError && (
         <div>
-          <NavbarComponent userName={userName} />
+          <NavbarComponent userLongin={userLongin} />
           <main className="container mx-auto max-w-7xl py-16  px-6 flex-grow">
             <Card className="p-6">
               <Table
@@ -641,6 +712,15 @@ export default function Dashboard() {
                 onClose={modalDel.onClose}
                 service={selectedService}
                 setServices={setServices}
+              />
+              <ModalViewProfile
+                isOpen={modalViewProfile.isOpen}
+                onClose={modalViewProfile.onClose}
+                username={userView}
+              />
+              <ModalProvLoading
+                isOpen={modalProvLoading.isOpen}
+                onClose={modalProvLoading.onClose}
               />
             </Card>
           </main>

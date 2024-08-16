@@ -7,7 +7,7 @@ import {
   ModalContent,
   Input,
 } from "@nextui-org/react";
-import { ModalFooter, useDisclosure } from "@nextui-org/modal";
+import { useDisclosure } from "@nextui-org/modal";
 
 import { PlusIcon } from "../../assets/icons/PlusIcon.jsx";
 import { FilePond, registerPlugin } from "react-filepond";

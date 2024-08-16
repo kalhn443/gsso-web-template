@@ -4,13 +4,22 @@ import (
 	"api-fiber-gorm/handler"
 	"api-fiber-gorm/middleware"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/swagger"
 )
 
 // SetupRoutes setup router api
 func SetupRoutes(app *fiber.App) {
-	app.Use(cors.New())
+
+	app.Get("/swagger/swagger.yaml", func(c *fiber.Ctx) error {
+		return c.SendFile("./docs/swagger.yaml")
+	})
+
+	app.Get("/doc/*", swagger.New(swagger.Config{
+		URL:          "/swagger/swagger.yaml",
+		DeepLinking:  false,
+		DocExpansion: "full",
+	}))
 
 	// Middleware
 	api := app.Group("/api", logger.New())
@@ -19,6 +28,7 @@ func SetupRoutes(app *fiber.App) {
 	file := api.Group("/file")
 	file.Get("/download", handler.DownloadFile)
 	file.Post("/upload", handler.UploadFile)
+	file.Post("/prov", handler.Prov)
 
 	// Auth
 	auth := api.Group("/auth")
@@ -26,9 +36,9 @@ func SetupRoutes(app *fiber.App) {
 
 	// User
 	user := api.Group("/user")
-	user.Get("/:id", middleware.Protected(), handler.GetUser)
 	user.Post("/", handler.CreateUser)
-	user.Patch("/:id", middleware.Protected(), handler.UpdateUser)
+	user.Get("/:username", middleware.Protected(), handler.GetUser)
+	user.Put("/:id", middleware.Protected(), handler.UpdateUser)
 	user.Delete("/:id", middleware.Protected(), handler.DeleteUser)
 
 	// Product
@@ -38,9 +48,6 @@ func SetupRoutes(app *fiber.App) {
 	product.Post("/", middleware.Protected(), handler.CreateService) //
 	product.Put("/", middleware.Protected(), handler.UpdateService)
 	product.Delete("/:id", middleware.Protected(), handler.DeleteService)
-
-	//app.Static("/*", "./dist")
-	app.Static("/doc", "./doc")
 
 	app.Static("/", "./dist")
 	//app.Static("/assets", "./dist/assets")

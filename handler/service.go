@@ -33,14 +33,18 @@ func GenerateEmptyService(c *fiber.Ctx) error {
 		serviceId := fmt.Sprintf("GS"+"%03d", i+1)
 		Services[i] = serviceId
 		contentJson, _ := json.Marshal(model.ContentOper{
-			Oper: "non-AIS",
+			Oper:                "non-AIS",
+			SmscDeliveryReceipt: "true",
 		})
 		contentAis, _ := json.Marshal(model.ContentOper{
-			Oper:  "AIS",
+			Oper:                "AIS",
+			SmscDeliveryReceipt: "true",
+
 			State: []string{"1", "13", "15"},
 		})
 		contentInter, _ := json.Marshal(model.ContentOper{
-			Oper: "INTER",
+			Oper:                "INTER",
+			SmscDeliveryReceipt: "true",
 		})
 		service := model.ServiceTemplate{
 			ServiceId:      serviceId,
@@ -122,11 +126,17 @@ func GetAllService(c *fiber.Ctx) error {
 	claims := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)
 	isAdmin := fmt.Sprintf("%s", claims["role"]) == "admin"
 	username := fmt.Sprintf("%s", claims["username"])
-
+	mobile := fmt.Sprintf("%s", claims["mobile"])
+	emailLead := fmt.Sprintf("%s", claims["emailLead"])
 	email := fmt.Sprintf("%s", claims["email"])
+	role := fmt.Sprintf("%s", claims["role"])
+
 	user := model.User{
-		Username: username,
-		Email:    email,
+		Username:  username,
+		Email:     email,
+		EmailLead: emailLead,
+		Mobile:    mobile,
+		Role:      role,
 	}
 
 	if !isAdmin {
@@ -156,7 +166,8 @@ func UpdateService(c *fiber.Ctx) error {
 	claims := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)
 	isAdmin := fmt.Sprintf("%s", claims["role"]) == "admin"
 	username := fmt.Sprintf("%s", claims["username"])
-	email := fmt.Sprintf("%s", claims["email"])
+
+	user := GetUserFromJWT(c)
 
 	service.ID = serviceFromDB.ID
 	service.ServiceId = serviceFromDB.ServiceId
@@ -164,13 +175,11 @@ func UpdateService(c *fiber.Ctx) error {
 	service.UpdatedBy = username
 
 	var servicesRes []model.ServiceTemplate
-	user := model.User{
-		Username: username,
-		Email:    email,
-	}
 
 	if isAdmin || strings.Contains(serviceFromDB.Owner, username) {
 		if !isAdmin {
+			service.Status = "pending"
+		} else if service.Status != "active" {
 			service.Status = "pending"
 		}
 
@@ -212,23 +221,28 @@ func DeleteService(c *fiber.Ctx) error {
 	claims := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)
 	isAdmin := fmt.Sprintf("%s", claims["role"]) == "admin"
 	username := fmt.Sprintf("%s", claims["username"])
-	email := fmt.Sprintf("%s", claims["email"])
+
+	user := GetUserFromJWT(c)
 
 	jsonData, _ := json.Marshal([]string{"AIS", "non-AIS"})
 	contentAis, _ := json.Marshal(model.ContentOper{
-		Oper:  "AIS",
+		Oper:                "AIS",
+		SmscDeliveryReceipt: "true",
+
 		State: []string{"1", "13", "15"},
 	})
 	contentNon, _ := json.Marshal(model.ContentOper{
-		Oper: "non-AIS",
+		Oper:                "non-AIS",
+		SmscDeliveryReceipt: "true",
 	})
 	contentInter, _ := json.Marshal(model.ContentOper{
-		Oper: "INTER",
+		Oper:                "INTER",
+		SmscDeliveryReceipt: "true",
 	})
 	serviceDel := model.ServiceTemplate{
 		ID:             serviceFromDB.ID,
 		ServiceId:      serviceFromDB.ServiceId,
-		ServiceName:    "empty",
+		ServiceName:    "",
 		Status:         "empty",
 		Owner:          "admin",
 		AllowOperation: jsonData,
@@ -237,11 +251,6 @@ func DeleteService(c *fiber.Ctx) error {
 		OperInter:      contentInter,
 		UpdatedAt:      model.JsonTime(time.Now()),
 		UpdatedBy:      username,
-	}
-
-	user := model.User{
-		Username: username,
-		Email:    email,
 	}
 
 	if isAdmin || strings.Contains(serviceFromDB.Owner, username) {
@@ -263,4 +272,21 @@ func DeleteService(c *fiber.Ctx) error {
 	}
 	return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"status": "error", "message": "forbidden", "data": nil})
 
+}
+
+func GetUserFromJWT(c *fiber.Ctx) model.User {
+	claims := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)
+	username := fmt.Sprintf("%s", claims["username"])
+	mobile := fmt.Sprintf("%s", claims["mobile"])
+	emailLead := fmt.Sprintf("%s", claims["emailLead"])
+	email := fmt.Sprintf("%s", claims["email"])
+	role := fmt.Sprintf("%s", claims["role"])
+
+	return model.User{
+		Username:  username,
+		Email:     email,
+		EmailLead: emailLead,
+		Mobile:    mobile,
+		Role:      role,
+	}
 }

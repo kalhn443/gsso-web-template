@@ -8,6 +8,7 @@ import {
   Snippet,
 } from "@nextui-org/react";
 import { convertServiceJson } from "./utils.js";
+import { ModalFooter } from "@nextui-org/modal";
 
 export default function ModalViewService({ isOpen, onClose, service }) {
   return (
@@ -18,7 +19,7 @@ export default function ModalViewService({ isOpen, onClose, service }) {
         scrollBehavior="outside"
         size="4xl"
         backdrop="blur"
-        className="relative flex min-h-dvh flex-col py-4"
+        // className="relative flex min-h-dvh flex-col py-4"
       >
         <ModalContent>
           {(onClose) => (
@@ -27,9 +28,9 @@ export default function ModalViewService({ isOpen, onClose, service }) {
                 VIEW SERVICE
               </ModalHeader>
               <ModalBody>
-                <form className="flex flex-col items-center justify-center   py-2">
+                <form className="flex flex-col items-center justify-center ">
                   <div className="flex max-w-4xl w-full gap-4">
-                    <div className="flex flex-col gap-2 py-2 w-full">
+                    <div className="flex flex-col gap-2  w-full">
                       <Snippet
                         color="success"
                         variant="flat"
@@ -42,15 +43,15 @@ export default function ModalViewService({ isOpen, onClose, service }) {
                       </Snippet>
                     </div>
                   </div>
-
-                  <div className="flex flex-row items-center justify-center  max-w-lg w-full flex-wrap sm:flex-nowrap  py-2  ">
-                    <Button color="danger" variant="light" onPress={onClose}>
-                      Close
-                    </Button>
-                  </div>
                 </form>
+
                 {/*</section>*/}
               </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+              </ModalFooter>
             </>
           )}
         </ModalContent>

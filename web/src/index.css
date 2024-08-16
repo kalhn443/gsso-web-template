@@ -17,4 +17,19 @@ html, body,span,p  {
     font-style: normal;
     border-radius: 15px;
 }
+.glass-background {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6.1px);
+    -webkit-backdrop-filter: blur(6.1px);
+    border: 1px solid rgba(255, 255, 255, 0.11);
+}
 
+.loading-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* styles อื่นๆ สำหรับ ballui */
+    z-index: 1; /* ให้ ballui อยู่ด้านบนของ component อื่น */
+}

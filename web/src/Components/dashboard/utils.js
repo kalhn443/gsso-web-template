@@ -53,23 +53,23 @@ export function convertServiceToString(service) {
 
     return {
       oper: operData.oper,
-      allowSmsRoaming: operData.allowSmsRoaming.toString().toUpperCase(),
+      allowSmsRoaming:
+        operData.allowSmsRoaming?.toString().toUpperCase() || "FALSE",
       smsSender: operData.smsSender,
       smsBodyThai: operData.smsThai,
       smsBodyEng: operData.smsEng,
       emailFrom: operData.emailFrom || "AIS@ais.co.th",
       emailSubject: operData.emailSubject || "-",
       emailBody: operData.emailBody || "-",
-      smscDeliveryReceipt: operData.smscDeliveryReceipt
-        .toString()
-        .toUpperCase(),
-      waitDR: operData.waitDR.toString().toUpperCase(),
+      smscDeliveryReceipt:
+        operData.smscDeliveryReceipt?.toString().toUpperCase() || "TRUE",
+      waitDR: operData.waitDR?.toString().toUpperCase() || "FALSE",
       otpDigit: operData.otpDigit,
       refDigit: operData.referenceDigit,
       lifeTimeoutMins: operData.lifeTimeoutMins,
       seedkey: operData.seedKey,
-      refundFlag: operData.refundFlag.toString().toUpperCase(),
-      state: operData.state || undefined, // เพิ่ม state สำหรับ AIS, ถ้าไม่มีให้เป็น array ว่าง
+      refundFlag: operData.refundFlag?.toString().toUpperCase() || "FALSE",
+      state: operData.state?.join(",") || undefined, // เพิ่ม state สำหรับ AIS, ถ้าไม่มีให้เป็น array ว่าง
     };
   });
 
@@ -98,23 +98,23 @@ export function convertServiceJson(service) {
 
     return {
       oper: operData.oper,
-      allowSmsRoaming: operData.allowSmsRoaming.toString().toUpperCase(),
+      allowSmsRoaming:
+        operData.allowSmsRoaming?.toString().toUpperCase() || "FALSE",
       smsSender: operData.smsSender,
       smsBodyThai: operData.smsThai,
       smsBodyEng: operData.smsEng,
       emailFrom: operData.emailFrom || "AIS@ais.co.th",
       emailSubject: operData.emailSubject || "-",
       emailBody: operData.emailBody || "-",
-      smscDeliveryReceipt: operData.smscDeliveryReceipt
-        .toString()
-        .toUpperCase(),
-      waitDR: operData.waitDR.toString().toUpperCase(),
+      smscDeliveryReceipt:
+        operData.smscDeliveryReceipt?.toString().toUpperCase() || "TRUE",
+      waitDR: operData.waitDR?.toString().toUpperCase() || "FALSE",
       otpDigit: operData.otpDigit,
       refDigit: operData.referenceDigit,
       lifeTimeoutMins: operData.lifeTimeoutMins,
       seedkey: operData.seedKey,
-      refundFlag: operData.refundFlag.toString().toUpperCase(),
-      state: operData.state || undefined, // เพิ่ม state สำหรับ AIS, ถ้าไม่มีให้เป็น array ว่าง
+      refundFlag: operData.refundFlag?.toString().toUpperCase() || "FALSE",
+      state: operData.state?.join(",") || undefined, // เพิ่ม state สำหรับ AIS, ถ้าไม่มีให้เป็น array ว่าง
     };
   });
 
