@@ -48,54 +48,54 @@ export default function ModalEditService({
       operAis: {
         oper: "AIS",
         otpDigit: "",
-        referenceDigit: "",
+        refDigit: "",
         lifeTimeoutMins: "",
         smsSender: "",
-        smsThai: "",
-        smsEng: "",
-        allowSmsRoaming: true,
-        smscDeliveryReceipt: true,
-        waitDR: false,
+        smsBodyThai: "",
+        smsBodyEng: "",
+        allowSmsRoaming: "FALSE",
+        smscDeliveryReceipt: "TRUE",
+        waitDR: "FALSE",
         emailFrom: "",
         emailSubject: "",
         emailBody: "",
-        seedKey: "111111111111111111111111",
-        refundFlag: false,
+        seedkey: "111111111111111111111111",
+        refundFlag: "FALSE",
         state: ["1", "13", "15"],
       },
       operNonAis: {
         oper: "non-AIS",
         otpDigit: "",
-        referenceDigit: "",
+        refDigit: "",
         lifeTimeoutMins: "",
         smsSender: "",
-        smsThai: "",
-        smsEng: "",
-        allowSmsRoaming: true,
-        smscDeliveryReceipt: true,
-        waitDR: false,
+        smsBodyThai: "",
+        smsBodyEng: "",
+        allowSmsRoaming: "FALSE",
+        smscDeliveryReceipt: "TRUE",
+        waitDR: "FALSE",
         emailFrom: "",
         emailSubject: "",
         emailBody: "",
-        seedKey: "111111111111111111111111",
-        refundFlag: false,
+        seedkey: "111111111111111111111111",
+        refundFlag: "FALSE",
       },
       operInter: {
         oper: "Inter",
         otpDigit: "",
-        referenceDigit: "",
+        refDigit: "",
         lifeTimeoutMins: "",
         smsSender: "",
-        smsThai: "",
-        smsEng: "",
-        allowSmsRoaming: true,
-        smscDeliveryReceipt: true,
-        waitDR: false,
+        smsBodyThai: "",
+        smsBodyEng: "",
+        allowSmsRoaming: "FALSE",
+        smscDeliveryReceipt: "TRUE",
+        waitDR: "FALSE",
         emailFrom: "",
         emailSubject: "",
         emailBody: "",
-        seedKey: "111111111111111111111111",
-        refundFlag: false,
+        seedkey: "111111111111111111111111",
+        refundFlag: "FALSE",
       },
       status: "empty",
       owner: "",
@@ -122,7 +122,10 @@ export default function ModalEditService({
           ...prevData,
           [operator]: {
             ...prevData[operator],
-            [name]: typeof value === "boolean" ? value.toString() : value,
+            [name]:
+              typeof value === "boolean"
+                ? value.toString().toUpperCase()
+                : value,
           },
         };
       } else {
@@ -307,18 +310,12 @@ export default function ModalEditService({
                           placeholder="Enter number of digit [4-12]"
                           type="number"
                           color={
-                            formData.operAis.referenceDigit
-                              ? "success"
-                              : "danger"
+                            formData.operAis.refDigit ? "success" : "danger"
                           }
-                          value={formData.operAis.referenceDigit}
-                          name="referenceDigit"
+                          value={formData.operAis.refDigit}
+                          name="refDigit"
                           onChange={(e) =>
-                            handleChange(
-                              "referenceDigit",
-                              e.target.value,
-                              "operAis",
-                            )
+                            handleChange("refDigit", e.target.value, "operAis")
                           }
                           min={4}
                           max={12}
@@ -385,11 +382,15 @@ export default function ModalEditService({
                           minRows={2}
                           placeholder="Max 350 digit"
                           color={
-                            formData.operAis.smsThai ? "success" : "danger"
+                            formData.operAis.smsBodyThai ? "success" : "danger"
                           }
-                          value={formData.operAis.smsThai}
+                          value={formData.operAis.smsBodyThai}
                           onChange={(e) =>
-                            handleChange("smsThai", e.target.value, "operAis")
+                            handleChange(
+                              "smsBodyThai",
+                              e.target.value,
+                              "operAis",
+                            )
                           }
                           maxLength={350}
                         />
@@ -400,10 +401,16 @@ export default function ModalEditService({
                           label="SMS Eng"
                           minRows={2}
                           placeholder="Max 350 digit"
-                          color={formData.operAis.smsEng ? "success" : "danger"}
-                          value={formData.operAis.smsEng}
+                          color={
+                            formData.operAis.smsBodyEng ? "success" : "danger"
+                          }
+                          value={formData.operAis.smsBodyEng}
                           onChange={(e) =>
-                            handleChange("smsEng", e.target.value, "operAis")
+                            handleChange(
+                              "smsBodyEng",
+                              e.target.value,
+                              "operAis",
+                            )
                           }
                           max={350}
                         />
@@ -502,7 +509,7 @@ export default function ModalEditService({
                           // checked={isSelected}
                           // onValueChange={setIsSelected}
                           isSelected={
-                            formData.operAis.allowSmsRoaming === "true"
+                            formData.operAis.allowSmsRoaming === "TRUE"
                           }
                           type="checkbox"
                           onValueChange={(isChecked) =>
@@ -516,14 +523,14 @@ export default function ModalEditService({
                           Allow roaming{" "}
                           <span
                             className={
-                              formData.operAis.allowSmsRoaming === "true"
+                              formData.operAis.allowSmsRoaming === "TRUE"
                                 ? "text-small text-success"
                                 : "text-small text-danger"
                             }
                             color="danger"
                           >
                             {" "}
-                            {formData.operAis.allowSmsRoaming === "true"
+                            {formData.operAis.allowSmsRoaming === "TRUE"
                               ? "ให้ลูกค้าต่างประเทศสามารถรับ SMS ได้"
                               : "ลูกค้าต่างประเทศไม่สามารถรับ SMS ได้"}
                           </span>
@@ -532,7 +539,7 @@ export default function ModalEditService({
                         <Switch
                           className="py-1"
                           isSelected={
-                            formData.operAis.smscDeliveryReceipt === "true"
+                            formData.operAis.smscDeliveryReceipt === "TRUE"
                           }
                           type="checkbox"
                           onValueChange={(isChecked) =>
@@ -549,7 +556,7 @@ export default function ModalEditService({
                         {isAdmin && (
                           <Switch
                             className="pt-1"
-                            isSelected={formData.operAis.waitDR === "true"}
+                            isSelected={formData.operAis.waitDR === "TRUE"}
                             type="checkbox"
                             onValueChange={(isChecked) =>
                               handleChange("waitDR", isChecked, "operAis")
@@ -566,7 +573,7 @@ export default function ModalEditService({
                         {isAdmin && (
                           <Switch
                             className="pt-1"
-                            isSelected={formData.operAis.refundFlag === "true"}
+                            isSelected={formData.operAis.refundFlag === "TRUE"}
                             type="checkbox"
                             onValueChange={(isChecked) =>
                               handleChange("refundFlag", isChecked, "operAis")
@@ -614,7 +621,7 @@ export default function ModalEditService({
                           placeholder="Default : AIS@ais.co.th"
                           type="text"
                           color={
-                            formData.operAis.smsEng ? "success" : "default"
+                            formData.operAis.smsBodyEng ? "success" : "default"
                           }
                           value={formData.operAis.emailFrom}
                           onChange={(e) =>
@@ -752,15 +759,13 @@ export default function ModalEditService({
                           placeholder="Enter number of digit [4-12]"
                           type="number"
                           color={
-                            formData.operNonAis.referenceDigit
-                              ? "success"
-                              : "danger"
+                            formData.operNonAis.refDigit ? "success" : "danger"
                           }
-                          value={formData.operNonAis.referenceDigit}
-                          name="referenceDigit"
+                          value={formData.operNonAis.refDigit}
+                          name="refDigit"
                           onChange={(e) =>
                             handleChange(
-                              "referenceDigit",
+                              "refDigit",
                               e.target.value,
                               "operNonAis",
                             )
@@ -834,12 +839,14 @@ export default function ModalEditService({
                           minRows={2}
                           placeholder="Max 350 digit"
                           color={
-                            formData.operNonAis.smsThai ? "success" : "danger"
+                            formData.operNonAis.smsBodyThai
+                              ? "success"
+                              : "danger"
                           }
-                          value={formData.operNonAis.smsThai}
+                          value={formData.operNonAis.smsBodyThai}
                           onChange={(e) =>
                             handleChange(
-                              "smsThai",
+                              "smsBodyThai",
                               e.target.value,
                               "operNonAis",
                             )
@@ -854,11 +861,17 @@ export default function ModalEditService({
                           minRows={2}
                           placeholder="Max 350 digit"
                           color={
-                            formData.operNonAis.smsEng ? "success" : "danger"
+                            formData.operNonAis.smsBodyEng
+                              ? "success"
+                              : "danger"
                           }
-                          value={formData.operNonAis.smsEng}
+                          value={formData.operNonAis.smsBodyEng}
                           onChange={(e) =>
-                            handleChange("smsEng", e.target.value, "operNonAis")
+                            handleChange(
+                              "smsBodyEng",
+                              e.target.value,
+                              "operNonAis",
+                            )
                           }
                           max={350}
                         />
@@ -870,7 +883,7 @@ export default function ModalEditService({
                           // checked={isSelected}
                           // onValueChange={setIsSelected}
                           isSelected={
-                            formData.operNonAis.allowSmsRoaming === "true"
+                            formData.operNonAis.allowSmsRoaming === "TRUE"
                           }
                           type="checkbox"
                           onValueChange={(isChecked) =>
@@ -884,14 +897,14 @@ export default function ModalEditService({
                           Allow roaming{" "}
                           <span
                             className={
-                              formData.operNonAis.allowSmsRoaming === "true"
+                              formData.operNonAis.allowSmsRoaming === "TRUE"
                                 ? "text-small text-success"
                                 : "text-small text-danger"
                             }
                             color="danger"
                           >
                             {" "}
-                            {formData.operNonAis.allowSmsRoaming === "true"
+                            {formData.operNonAis.allowSmsRoaming === "TRUE"
                               ? "ให้ลูกค้าต่างประเทศสามารถรับ SMS ได้"
                               : "ลูกค้าต่างประเทศไม่สามารถรับ SMS ได้"}
                           </span>
@@ -900,7 +913,7 @@ export default function ModalEditService({
                         <Switch
                           className="py-1"
                           isSelected={
-                            formData.operNonAis.smscDeliveryReceipt === "true"
+                            formData.operNonAis.smscDeliveryReceipt === "TRUE"
                           }
                           type="checkbox"
                           onValueChange={(isChecked) =>
@@ -918,7 +931,7 @@ export default function ModalEditService({
                           <>
                             <Switch
                               className="pt-1"
-                              isSelected={formData.operNonAis.waitDR === "true"}
+                              isSelected={formData.operNonAis.waitDR === "TRUE"}
                               type="checkbox"
                               onValueChange={(isChecked) =>
                                 handleChange("waitDR", isChecked, "operNonAis")
@@ -934,7 +947,7 @@ export default function ModalEditService({
                             <Switch
                               className="pt-1"
                               isSelected={
-                                formData.operNonAis.refundFlag === "true"
+                                formData.operNonAis.refundFlag === "TRUE"
                               }
                               type="checkbox"
                               onValueChange={(isChecked) =>
@@ -1055,15 +1068,13 @@ export default function ModalEditService({
                           placeholder="Enter number of digit [4-12]"
                           type="number"
                           color={
-                            formData.operInter.referenceDigit
-                              ? "success"
-                              : "danger"
+                            formData.operInter.refDigit ? "success" : "danger"
                           }
-                          value={formData.operInter.referenceDigit}
-                          name="referenceDigit"
+                          value={formData.operInter.refDigit}
+                          name="refDigit"
                           onChange={(e) =>
                             handleChange(
-                              "referenceDigit",
+                              "refDigit",
                               e.target.value,
                               "operInter",
                             )
@@ -1137,11 +1148,17 @@ export default function ModalEditService({
                           minRows={2}
                           placeholder="Max 350 digit"
                           color={
-                            formData.operInter.smsThai ? "success" : "danger"
+                            formData.operInter.smsBodyThai
+                              ? "success"
+                              : "danger"
                           }
-                          value={formData.operInter.smsThai}
+                          value={formData.operInter.smsBodyThai}
                           onChange={(e) =>
-                            handleChange("smsThai", e.target.value, "operInter")
+                            handleChange(
+                              "smsBodyThai",
+                              e.target.value,
+                              "operInter",
+                            )
                           }
                           maxLength={350}
                         />
@@ -1153,11 +1170,15 @@ export default function ModalEditService({
                           minRows={2}
                           placeholder="Max 350 digit"
                           color={
-                            formData.operInter.smsEng ? "success" : "danger"
+                            formData.operInter.smsBodyEng ? "success" : "danger"
                           }
-                          value={formData.operInter.smsEng}
+                          value={formData.operInter.smsBodyEng}
                           onChange={(e) =>
-                            handleChange("smsEng", e.target.value, "operInter")
+                            handleChange(
+                              "smsBodyEng",
+                              e.target.value,
+                              "operInter",
+                            )
                           }
                           max={350}
                         />
@@ -1169,7 +1190,7 @@ export default function ModalEditService({
                           // checked={isSelected}
                           // onValueChange={setIsSelected}
                           isSelected={
-                            formData.operInter.allowSmsRoaming === "true"
+                            formData.operInter.allowSmsRoaming === "TRUE"
                           }
                           type="checkbox"
                           onValueChange={(isChecked) =>
@@ -1183,14 +1204,14 @@ export default function ModalEditService({
                           Allow roaming{" "}
                           <span
                             className={
-                              formData.operInter.allowSmsRoaming === "true"
+                              formData.operInter.allowSmsRoaming === "TRUE"
                                 ? "text-small text-success"
                                 : "text-small text-danger"
                             }
                             color="danger"
                           >
                             {" "}
-                            {formData.operInter.allowSmsRoaming === "true"
+                            {formData.operInter.allowSmsRoaming === "TRUE"
                               ? "ให้ลูกค้าต่างประเทศสามารถรับ SMS ได้"
                               : "ลูกค้าต่างประเทศไม่สามารถรับ SMS ได้"}
                           </span>
@@ -1199,7 +1220,7 @@ export default function ModalEditService({
                         <Switch
                           className="py-1"
                           isSelected={
-                            formData.operInter.smscDeliveryReceipt === "true"
+                            formData.operInter.smscDeliveryReceipt === "TRUE"
                           }
                           type="checkbox"
                           onValueChange={(isChecked) =>
@@ -1217,7 +1238,7 @@ export default function ModalEditService({
                           <>
                             <Switch
                               className="pt-1"
-                              isSelected={formData.operInter.waitDR === "true"}
+                              isSelected={formData.operInter.waitDR === "TRUE"}
                               type="checkbox"
                               onValueChange={(isChecked) =>
                                 handleChange("waitDR", isChecked, "operInter")
@@ -1233,7 +1254,7 @@ export default function ModalEditService({
                             <Switch
                               className="pt-1"
                               isSelected={
-                                formData.operInter.refundFlag === "true"
+                                formData.operInter.refundFlag === "TRUE"
                               }
                               type="checkbox"
                               onValueChange={(isChecked) =>
@@ -1339,7 +1360,7 @@ export default function ModalEditService({
                         // isRequired
                         label="Owner"
                         size="md"
-                        placeholder="Default : AIS@ais.co.th"
+                        placeholder="Enter owner"
                         type="text"
                         value={formData.owner}
                         onChange={(e) => handleChange("owner", e.target.value)}

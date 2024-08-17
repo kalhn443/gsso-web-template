@@ -56,8 +56,8 @@ export function convertServiceToString(service) {
       allowSmsRoaming:
         operData.allowSmsRoaming?.toString().toUpperCase() || "FALSE",
       smsSender: operData.smsSender,
-      smsBodyThai: operData.smsThai,
-      smsBodyEng: operData.smsEng,
+      smsBodyThai: operData.smsBodyThai,
+      smsBodyEng: operData.smsBodyEng,
       emailFrom: operData.emailFrom || "AIS@ais.co.th",
       emailSubject: operData.emailSubject || "-",
       emailBody: operData.emailBody || "-",
@@ -65,9 +65,9 @@ export function convertServiceToString(service) {
         operData.smscDeliveryReceipt?.toString().toUpperCase() || "TRUE",
       waitDR: operData.waitDR?.toString().toUpperCase() || "FALSE",
       otpDigit: operData.otpDigit,
-      refDigit: operData.referenceDigit,
+      refDigit: operData.refDigit,
       lifeTimeoutMins: operData.lifeTimeoutMins,
-      seedkey: operData.seedKey,
+      seedkey: operData.seedkey,
       refundFlag: operData.refundFlag?.toString().toUpperCase() || "FALSE",
       state: operData.state?.join(",") || undefined, // เพิ่ม state สำหรับ AIS, ถ้าไม่มีให้เป็น array ว่าง
     };
@@ -101,8 +101,8 @@ export function convertServiceJson(service) {
       allowSmsRoaming:
         operData.allowSmsRoaming?.toString().toUpperCase() || "FALSE",
       smsSender: operData.smsSender,
-      smsBodyThai: operData.smsThai,
-      smsBodyEng: operData.smsEng,
+      smsBodyThai: operData.smsBodyThai,
+      smsBodyEng: operData.smsBodyEng,
       emailFrom: operData.emailFrom || "AIS@ais.co.th",
       emailSubject: operData.emailSubject || "-",
       emailBody: operData.emailBody || "-",
@@ -110,9 +110,9 @@ export function convertServiceJson(service) {
         operData.smscDeliveryReceipt?.toString().toUpperCase() || "TRUE",
       waitDR: operData.waitDR?.toString().toUpperCase() || "FALSE",
       otpDigit: operData.otpDigit,
-      refDigit: operData.referenceDigit,
+      refDigit: operData.refDigit,
       lifeTimeoutMins: operData.lifeTimeoutMins,
-      seedkey: operData.seedKey,
+      seedkey: operData.seedkey,
       refundFlag: operData.refundFlag?.toString().toUpperCase() || "FALSE",
       state: operData.state?.join(",") || undefined, // เพิ่ม state สำหรับ AIS, ถ้าไม่มีให้เป็น array ว่าง
     };

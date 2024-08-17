@@ -35,34 +35,6 @@ func (t *JsonTime) Scan(value interface{}) error {
 	return fmt.Errorf("can not convert %v to JsonTime", value)
 }
 
-//type ServiceTemplate struct {
-//	ID                  uint           `gorm:"primarykey" json:"ID"`
-//	CreatedAt           JsonTime       `gorm:"type:timestamp;default:CURRENT_TIMESTAMP" json:"createdAt"`
-//	UpdatedAt           JsonTime       `gorm:"type:timestamp;default:CURRENT_TIMESTAMP" json:"updatedAt"`
-//	AllowOperation      datatypes.JSON `gorm:"type:json" json:"allowOperation"`
-//	ServiceName         string         `json:"serviceName"`
-//	ServiceId           string         `json:"serviceId"`
-//	Oper                string         `json:"oper"`
-//	AllowSmsRoaming     bool           `json:"allowSmsRoaming"`
-//	SmsSender           string         `json:"smsSender"`
-//	SmsBodyThai         string         `json:"smsBodyThai"`
-//	SmsBodyEng          string         `json:"smsBodyEng"`
-//	EmailFrom           string         `json:"emailFrom"`
-//	EmailSubject        string         `json:"emailSubject"`
-//	EmailBody           string         `json:"emailBody"`
-//	SmscDeliveryReceipt bool           `json:"smscDeliveryReceipt"`
-//	WaitDR              bool           `json:"waitDR"`
-//	OtpDigit            string         `json:"otpDigit"`
-//	RefDigit            string         `json:"refDigit"`
-//	LifeTimeoutMins     string         `json:"lifeTimeoutMins"`
-//	Seedkey             string         `json:"seedkey"`
-//	RefundFlag          bool           `json:"refundFlag"`
-//	Owner               string         `json:"owner"`
-//	UpdatedBy           string         `json:"updatedBy"`
-//	Status              string         `json:"status"`
-//	ProjectSite         string         `json:"projectSite"`
-//}
-
 type ServiceTemplate struct {
 	ID             uint           `gorm:"primarykey" json:"ID"`
 	CreatedAt      JsonTime       `gorm:"type:timestamp;default:CURRENT_TIMESTAMP" json:"createdAt"`
@@ -96,4 +68,10 @@ type ContentOper struct {
 	Seedkey             string   `json:"seedkey"`
 	RefundFlag          string   `json:"refundFlag"`
 	State               []string `json:"state,omitempty"`
+}
+
+type ServiceMigrate struct {
+	ProjectSite string `json:"projectSite"`
+	Owner       string `json:"owner"`
+	Data        string `json:"data"`
 }

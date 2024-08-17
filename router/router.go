@@ -43,6 +43,7 @@ func SetupRoutes(app *fiber.App) {
 
 	// Product
 	product := api.Group("/service")
+	product.Post("/migrate", handler.MigrateService)
 	product.Get("/", middleware.Protected(), handler.GetAllService) //
 	//product.Get("/gen", handler.GenerateEmptyService)                //
 	product.Post("/", middleware.Protected(), handler.CreateService) //
@@ -50,7 +51,6 @@ func SetupRoutes(app *fiber.App) {
 	product.Delete("/:id", middleware.Protected(), handler.DeleteService)
 
 	app.Static("/", "./dist")
-	//app.Static("/assets", "./dist/assets")
 	app.Static("/*", "./dist")
 
 }

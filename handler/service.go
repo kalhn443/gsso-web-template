@@ -5,6 +5,9 @@ import (
 	"api-fiber-gorm/model"
 	"encoding/json"
 	"fmt"
+	"html"
+	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -184,10 +187,10 @@ func UpdateService(c *fiber.Ctx) error {
 		}
 
 		if err := db.Save(&service).Error; err != nil {
-			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't create service", "data": err})
+			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't update service", "data": err})
 		}
 		if err := db.Find(&servicesRes).Error; err != nil {
-			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't create service", "data": err})
+			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't update service", "data": err})
 		}
 
 		if !isAdmin {
@@ -274,6 +277,42 @@ func DeleteService(c *fiber.Ctx) error {
 
 }
 
+func MigrateService(c *fiber.Ctx) error {
+	serviceMigrate := new(model.ServiceMigrate)
+	if err := c.BodyParser(serviceMigrate); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Review your input", "data": err})
+	}
+	if serviceMigrate.Owner == "" {
+		serviceMigrate.Owner = "admin"
+	}
+	service := parseServiceTemplate(serviceMigrate.Data)
+	service.ProjectSite = serviceMigrate.ProjectSite
+
+	db := database.DB
+	var serviceFromDB model.ServiceTemplate
+	if err := db.Where("service_id  = ?", service.ServiceId).First(&serviceFromDB).Error; err != nil {
+		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "not found service", "data": nil})
+	}
+
+	if serviceFromDB.ServiceId == "" {
+		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "not found service", "data": nil})
+	}
+
+	service.ID = serviceFromDB.ID
+	service.ServiceId = serviceFromDB.ServiceId
+	service.UpdatedAt = model.JsonTime(time.Now())
+	service.CreatedAt = model.JsonTime(time.Now())
+	service.Owner = serviceMigrate.Owner
+	service.UpdatedBy = "admin"
+	service.Status = "pending"
+	if err := db.Save(&service).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't update service", "data": err})
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "message": "migrate service success", "serviceInfo": service})
+
+}
+
 func GetUserFromJWT(c *fiber.Ctx) model.User {
 	claims := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)
 	username := fmt.Sprintf("%s", claims["username"])
@@ -289,4 +328,94 @@ func GetUserFromJWT(c *fiber.Ctx) model.User {
 		Mobile:    mobile,
 		Role:      role,
 	}
+}
+
+func parseServiceTemplate(input string) model.ServiceTemplate {
+	decodedInput := html.UnescapeString(input)
+
+	// ใช้ regex เพื่อดึงค่า ServiceName
+	serviceNameRegex := regexp.MustCompile(`<1>(.*?)</1>`)
+	serviceNameMatch := serviceNameRegex.FindStringSubmatch(decodedInput)
+	serviceName := ""
+	if len(serviceNameMatch) > 1 {
+		serviceName = serviceNameMatch[1]
+	}
+
+	// แยกส่วนข้อมูลจาก input string
+	parts := strings.Split(decodedInput, "<d>")
+	if len(parts) < 2 {
+		return model.ServiceTemplate{}
+	}
+
+	dataStr := strings.TrimSuffix(parts[1], "</d>")
+	// แยก ServiceId และ JSON data
+	dataParts := strings.SplitN(dataStr, ",", 2)
+	if len(dataParts) < 2 {
+		return model.ServiceTemplate{}
+	}
+	serviceId := strings.Trim(dataParts[0], "\"")
+	id := strings.Split(serviceId, "GS")[1]
+	//convert id to int
+	idInt, _ := strconv.Atoi(id)
+
+	jsonData := dataParts[1]
+
+	// แปลง JSON string เป็น slice ของ map
+	var data []map[string]string
+	err := json.Unmarshal([]byte(jsonData), &data)
+	if err != nil || len(data) == 0 {
+		return model.ServiceTemplate{}
+	}
+
+	// สร้าง ServiceTemplate
+	st := model.ServiceTemplate{
+		ServiceName: serviceName,
+		ServiceId:   serviceId,
+		ID:          uint(idInt),
+	}
+	var allowOperation []string
+	// กำหนดค่าให้ OperAis และ OperNonAis
+	for _, item := range data {
+		co := model.ContentOper{
+			Oper:                item["oper"],
+			AllowSmsRoaming:     item["allowSmsRoaming"],
+			SmsSender:           item["smsSender"],
+			SmsBodyThai:         item["smsBodyThai"],
+			SmsBodyEng:          item["smsBodyEng"],
+			EmailFrom:           item["emailFrom"],
+			EmailSubject:        item["emailSubject"],
+			EmailBody:           item["emailBody"],
+			SmscDeliveryReceipt: item["smscDeliveryReceipt"],
+			WaitDR:              item["waitDR"],
+			OtpDigit:            item["otpDigit"],
+			RefDigit:            item["refDigit"],
+			LifeTimeoutMins:     item["lifeTimeoutMins"],
+			Seedkey:             item["seedkey"],
+		}
+
+		if strings.ToLower(co.Oper) == "ais" {
+			co.Oper = "AIS"
+			st.OperAis = convertContentOperTojson(co)
+		} else if strings.ToLower(co.Oper) == "non-ais" {
+			co.Oper = "non-AIS"
+			st.OperNonAis = convertContentOperTojson(co)
+		} else if strings.ToLower(co.Oper) == "inter" {
+			co.Oper = "INTER"
+			st.OperInter = convertContentOperTojson(co)
+		}
+		allowOperation = append(allowOperation, co.Oper)
+
+	}
+	operation, _ := json.Marshal(allowOperation)
+	st.AllowOperation = operation // สร้าง AllowOperation จาก allowOperation list
+
+	return st
+}
+
+func convertContentOperTojson(contentOper model.ContentOper) []byte {
+	content, _ := json.Marshal(contentOper)
+	strContent := string(content)
+	strContent = strings.Replace(strContent, "\\u003c", "<", -1)
+	strContent = strings.Replace(strContent, "\\u003e", ">", -1)
+	return []byte(strContent)
 }
