@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
+	"time"
 )
 
 // SetupRoutes setup router api
@@ -16,6 +17,7 @@ func SetupRoutes(app *fiber.App) {
 	})
 
 	app.Get("/doc/*", swagger.New(swagger.Config{
+		Title:        "Swagger GSSO Docs",
 		URL:          "/swagger/swagger.yaml",
 		DeepLinking:  false,
 		DocExpansion: "full",
@@ -50,7 +52,13 @@ func SetupRoutes(app *fiber.App) {
 	product.Put("/", middleware.Protected(), handler.UpdateService)
 	product.Delete("/:id", middleware.Protected(), handler.DeleteService)
 
-	app.Static("/", "./dist")
-	app.Static("/*", "./dist")
+	app.Static("/", "./dist", fiber.Static{
+		CacheDuration: 10 * time.Second,
+		MaxAge:        10,
+	})
+	app.Static("/*", "./dist", fiber.Static{
+		CacheDuration: 10 * time.Second,
+		MaxAge:        10,
+	})
 
 }

@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
 import { toast, ToastContainer } from "react-toastify";
 import Cookies from "js-cookie";
+import { CopyDocumentIcon } from "../../assets/icons/CopyDocumentIcon.jsx";
 
 export default function ModalEditService({
   isOpen,
@@ -728,7 +729,22 @@ export default function ModalEditService({
                   {formData.allowOperation.includes("non-AIS") && (
                     <div className="flex   w-full flex-wrap  gap-4">
                       <Divider className="  w-full  my-4" />
-                      <h3>NON-AIS Operation</h3>
+
+                      <div className="flex flex-row w-full flex-wrap sm:flex-nowrap gap-4 justify-between items-center">
+                        <h3 className="flex-grow text-left">
+                          NON-AIS Operation
+                        </h3>
+                        <Button
+                          color="success"
+                          variant="light"
+                          startContent={<CopyDocumentIcon />}
+                          onPress={(e) =>
+                            handleChange("operNonAis", formData.operAis, "")
+                          }
+                        >
+                          Clone AIS Operation
+                        </Button>
+                      </div>
                       <div className="flex   w-full flex-wrap sm:flex-nowrap gap-4 ">
                         <Input
                           isRequired
@@ -1037,7 +1053,20 @@ export default function ModalEditService({
                   {formData.allowOperation.includes("INTER") && (
                     <div className="flex   w-full flex-wrap  gap-4">
                       <Divider className="  w-full  my-4" />
-                      <h3>INTER Operation</h3>
+                      <div className="flex flex-row w-full flex-wrap sm:flex-nowrap gap-4 justify-between items-center">
+                        <h3 className="flex-grow text-left">INTER Operation</h3>
+                        <Button
+                          color="success"
+                          variant="light"
+                          startContent={<CopyDocumentIcon />}
+                          onPress={(e) =>
+                            handleChange("operInter", formData.operAis, "")
+                          }
+                        >
+                          Clone AIS Operation
+                        </Button>
+                      </div>
+
                       <div className="flex   w-full flex-wrap sm:flex-nowrap gap-4 ">
                         <Input
                           isRequired
