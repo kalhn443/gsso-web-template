@@ -91,7 +91,7 @@ export default function NavbarComponent({ userLongin }) {
       <ModalViewProfile
         isOpen={modalViewProfile.isOpen}
         onClose={modalViewProfile.onClose}
-        username={userLongin}
+        userInfo={userLongin}
       />
     </>
   );

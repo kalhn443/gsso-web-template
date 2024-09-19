@@ -321,19 +321,22 @@ export default function Dashboard() {
                       Provisioning
                     </DropdownItem>
                   )}
-                  <DropdownItem
-                    key="delete"
-                    className="text-danger"
-                    color="danger"
-                    startContent={
-                      <DeleteDocumentIcon
-                        className={cn(iconClasses, "text-danger")}
-                      />
-                    }
-                    onPress={() => handleDelete(service)}
-                  >
-                    Delete
-                  </DropdownItem>
+
+                  {isAdmin && (
+                    <DropdownItem
+                      key="delete"
+                      className="text-danger"
+                      color="danger"
+                      startContent={
+                        <DeleteDocumentIcon
+                          className={cn(iconClasses, "text-danger")}
+                        />
+                      }
+                      onPress={() => handleDelete(service)}
+                    >
+                      Delete
+                    </DropdownItem>
+                  )}
                 </DropdownMenu>
               </Dropdown>
             </div>
@@ -716,7 +719,8 @@ export default function Dashboard() {
               <ModalViewProfile
                 isOpen={modalViewProfile.isOpen}
                 onClose={modalViewProfile.onClose}
-                username={userView}
+                userInfo={userView}
+                role={userLongin.role}
               />
               <ModalProvLoading
                 isOpen={modalProvLoading.isOpen}

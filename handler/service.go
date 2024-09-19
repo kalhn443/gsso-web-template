@@ -290,7 +290,7 @@ func MigrateService(c *fiber.Ctx) error {
 
 	db := database.DB
 	var serviceFromDB model.ServiceTemplate
-	if err := db.Where("service_id  = ?", service.ServiceId).First(&serviceFromDB).Error; err != nil {
+	if err := db.Where("service_id  = ?", strings.Trim(service.ServiceId, " ")).First(&serviceFromDB).Error; err != nil {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "not found service", "data": nil})
 	}
 
