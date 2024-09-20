@@ -26,8 +26,11 @@ func filterOwnerServices(services []model.ServiceTemplate, owner string) []model
 }
 
 func GenerateEmptyService(c *fiber.Ctx) error {
-	Services := make([]string, 999)
 	db := database.DB
+	db.Migrator().DropTable(&model.ServiceTemplate{})
+	db.AutoMigrate(&model.ServiceTemplate{})
+
+	Services := make([]string, 999)
 	jsonData, _ := json.Marshal([]string{"AIS", "non-AIS"})
 
 	for i := 0; i < 999; i++ {
@@ -66,7 +69,7 @@ func GenerateEmptyService(c *fiber.Ctx) error {
 		}
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "message": "User found", "data": Services})
+	return c.JSON(fiber.Map{"status": "success", "message": "service generated successfully", "data": Services})
 }
 
 // CreateService new service

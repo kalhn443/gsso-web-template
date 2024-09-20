@@ -727,6 +727,9 @@ export default function Dashboard() {
                 onClose={modalProvLoading.onClose}
               />
             </Card>
+            <p className="text-end m-4 text-default-400 text-small">
+              Contact & Support : {import.meta.env.VITE_CONTACT}
+            </p>
           </main>
         </div>
       )}

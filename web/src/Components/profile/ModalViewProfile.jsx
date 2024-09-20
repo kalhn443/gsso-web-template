@@ -8,12 +8,26 @@ import {
   Input,
   Button,
   Avatar,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import { selectOperation } from "../dashboard/data.js";
+import { EyeSlashFilledIcon } from "../../assets/icons/EyeSlashFilledIcon.jsx";
+import { EyeFilledIcon } from "../../assets/icons/EyeFilledIcon.jsx";
 
 export default function ModalViewProfile({ isOpen, onClose, userInfo, role }) {
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const roleOptions = [
+    { key: "admin", label: "admin" },
+    { key: "owner", label: "owner" },
+  ];
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -37,6 +51,13 @@ export default function ModalViewProfile({ isOpen, onClose, userInfo, role }) {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+
+  const handleRoleChange = (value) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      role: value,
     }));
   };
 
@@ -127,21 +148,41 @@ export default function ModalViewProfile({ isOpen, onClose, userInfo, role }) {
               />
               {role === "admin" && (
                 <>
-                  <Input
+                  <Select
+                    disallowEmptySelection
                     label="Role"
-                    name="role"
-                    value={formData.role}
-                    onChange={handleInputChange}
-                    placeholder="Enter your role"
-                  />
+                    placeholder="Select a role"
+                    selectedKeys={formData.role ? [formData.role] : []}
+                    onChange={(e) => handleRoleChange(e.target.value)}
+                  >
+                    {roleOptions.map((role) => (
+                      <SelectItem key={role.key} value={role.key}>
+                        {role.label}
+                      </SelectItem>
+                    ))}
+                  </Select>
                   <Input
                     label="Password"
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
                     placeholder="Enter your password"
+                    type={isVisible ? "text" : "password"}
+                    endContent={
+                      <button
+                        className="focus:outline-none"
+                        type="button"
+                        onClick={toggleVisibility}
+                        aria-label="toggle password visibility"
+                      >
+                        {isVisible ? (
+                          <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                        ) : (
+                          <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                        )}
+                      </button>
+                    }
                   />
-
                   <Button color="primary" onPress={handleSubmit}>
                     Update
                   </Button>

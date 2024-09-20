@@ -14,6 +14,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import { EyeSlashFilledIcon } from "../../assets/icons/EyeSlashFilledIcon.jsx";
+import { EyeFilledIcon } from "../../assets/icons/EyeFilledIcon.jsx";
 
 export function LoginComponent() {
   const [identity, setIdentity] = React.useState("");
@@ -23,6 +25,9 @@ export function LoginComponent() {
   const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
   const [loginMsg, setLoginMsg] = React.useState("Login");
+  const [isVisible, setIsVisible] = React.useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
+  const CONTACT = import.meta.env.VITE_CONTACT;
 
   const API_BASE_URL = import.meta.env.DEV
     ? import.meta.env.VITE_API_BASE_URL
@@ -111,17 +116,33 @@ export function LoginComponent() {
                     color={password ? "success" : "default"}
                     onValueChange={setPassword}
                     placeholder="Enter your password"
-                    type="password"
                     size="lg"
                     isInvalid={loginError}
                     errorMessage={loginErrorMsg}
+                    type={isVisible ? "text" : "password"}
+                    endContent={
+                      <button
+                        className="focus:outline-none"
+                        type="button"
+                        onClick={toggleVisibility}
+                        aria-label="toggle password visibility"
+                      >
+                        {isVisible ? (
+                          <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                        ) : (
+                          <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                        )}
+                      </button>
+                    }
                   />
-                  <p className="text-center text-small">
-                    Need to create an account?{" "}
-                    <Link size="sm" href={"/register"}>
-                      Sign up
-                    </Link>
-                  </p>
+                  <div>
+                    <p className="text-start text-small">
+                      Need to create an account?{" "}
+                      <Link size="sm" href={"/register"}>
+                        Sign up
+                      </Link>
+                    </p>
+                  </div>
 
                   <div className="flex gap-2 justify-end">
                     <Button
@@ -137,6 +158,9 @@ export function LoginComponent() {
                 </form>
               </CardBody>
             </Card>
+            <p className="text-start m-4 text-default-400 text-small">
+              Contact & Support : {CONTACT}
+            </p>
           </div>
         </div>
       </div>

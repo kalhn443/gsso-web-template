@@ -14,12 +14,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import { EyeSlashFilledIcon } from "../../assets/icons/EyeSlashFilledIcon.jsx";
+import { EyeFilledIcon } from "../../assets/icons/EyeFilledIcon.jsx";
 
 export function RegisterComponent() {
-  const API_BASE_URL = import.meta.env.DEV
-    ? import.meta.env.VITE_API_BASE_URL
-    : "";
-
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [mobile, setMobile] = React.useState("");
@@ -31,6 +29,10 @@ export function RegisterComponent() {
   const [regisLoading, setRegisLoading] = React.useState(false);
   const [regisMsg, setRegisMsg] = React.useState("Create an account");
   const navigate = useNavigate();
+
+  const [isVisible, setIsVisible] = React.useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
+  const CONTACT = import.meta.env.VITE_CONTACT;
 
   // check email format
   const validateEmail = (value) =>
@@ -60,7 +62,6 @@ export function RegisterComponent() {
     const API_BASE_URL = import.meta.env.DEV
       ? import.meta.env.VITE_API_BASE_URL
       : "";
-
     axios
       .post(`${API_BASE_URL}/api/user`, {
         username,
@@ -187,7 +188,21 @@ export function RegisterComponent() {
                     color={regisPassword ? "success" : "default"}
                     onValueChange={setRegisPassword}
                     placeholder="Enter your password"
-                    type="password"
+                    type={isVisible ? "text" : "password"}
+                    endContent={
+                      <button
+                        className="focus:outline-none"
+                        type="button"
+                        onClick={toggleVisibility}
+                        aria-label="toggle password visibility"
+                      >
+                        {isVisible ? (
+                          <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                        ) : (
+                          <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                        )}
+                      </button>
+                    }
                   />
 
                   <Input
@@ -205,7 +220,21 @@ export function RegisterComponent() {
                         : "default"
                     }
                     errorMessage="Password missmatch"
-                    type="password"
+                    type={isVisible ? "text" : "password"}
+                    endContent={
+                      <button
+                        className="focus:outline-none"
+                        type="button"
+                        onClick={toggleVisibility}
+                        aria-label="toggle password visibility"
+                      >
+                        {isVisible ? (
+                          <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                        ) : (
+                          <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                        )}
+                      </button>
+                    }
                   />
 
                   {regisError && (
@@ -214,18 +243,14 @@ export function RegisterComponent() {
                       {regisErrorMsg}
                     </div>
                   )}
-
-                  <p className="text-center text-small">
-                    Already have an account?{" "}
-                    <Link
-                      size="sm"
-                      // as="link"
-                      href={"/login"}
-                      //  onPress={() => navigate("/login")}
-                    >
-                      Login
-                    </Link>
-                  </p>
+                  <div>
+                    <p className="text-start  text-small">
+                      Already have an account?{" "}
+                      <Link size="sm" href={"/login"}>
+                        Login
+                      </Link>
+                    </p>
+                  </div>
                   <div className="flex gap-2 justify-end">
                     <Button
                       isDisabled={
@@ -245,6 +270,9 @@ export function RegisterComponent() {
                 </form>
               </CardBody>
             </Card>
+            <p className="text-start m-4 text-default-400 text-small">
+              Contact & Support : {CONTACT}
+            </p>
           </div>
         </div>
       </div>
