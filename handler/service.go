@@ -334,7 +334,7 @@ func GetUserFromJWT(c *fiber.Ctx) model.User {
 }
 
 func parseServiceTemplate(input string) model.ServiceTemplate {
-	decodedInput := html.UnescapeString(input)
+	decodedInput := unescapeRecursive(input)
 
 	// ใช้ regex เพื่อดึงค่า ServiceName
 	serviceNameRegex := regexp.MustCompile(`<1>(.*?)</1>`)
@@ -413,6 +413,14 @@ func parseServiceTemplate(input string) model.ServiceTemplate {
 	st.AllowOperation = operation // สร้าง AllowOperation จาก allowOperation list
 
 	return st
+}
+func unescapeRecursive(s string) string {
+	prev := ""
+	for s != prev {
+		prev = s
+		s = html.UnescapeString(s)
+	}
+	return s
 }
 
 func convertContentOperTojson(contentOper model.ContentOper) []byte {

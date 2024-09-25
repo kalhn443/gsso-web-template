@@ -309,16 +309,30 @@ export default function Dashboard() {
 
                   {isAdmin && (
                     <DropdownItem
-                      key="provisioning"
+                      key="provisioning vas"
                       // className="text-default-500"
                       startContent={
                         <ProvisioningIcon
                           className={cn(iconClasses, "text-primary-400")}
                         />
                       }
-                      onPress={() => handleProvisioning(service)}
+                      onPress={() => handleProvisioning(service, "vas")}
                     >
-                      Provisioning
+                      Provisioning [VAS]
+                    </DropdownItem>
+                  )}
+                  {isAdmin && (
+                    <DropdownItem
+                      key="provisioning it"
+                      // className="text-default-500"
+                      startContent={
+                        <ProvisioningIcon
+                          className={cn(iconClasses, "text-primary-400")}
+                        />
+                      }
+                      onPress={() => handleProvisioning(service, "it")}
+                    >
+                      Provisioning [IT]
                     </DropdownItem>
                   )}
 
@@ -600,7 +614,7 @@ export default function Dashboard() {
 
   const modalProvLoading = useDisclosure();
 
-  const handleProvisioning = async (service) => {
+  const handleProvisioning = async (service, site) => {
     const jwtToken = Cookies.get("jwt");
     if (!jwtToken) {
       toast.error("Authentication token not found", { autoClose: 2500 });
@@ -615,7 +629,7 @@ export default function Dashboard() {
       const response = await axios.post(
         `${API_BASE_URL}/api/file/prov`,
         {
-          site: service.projectSite,
+          site: site,
           serviceId: service.serviceId,
           data,
         },
