@@ -738,9 +738,12 @@ export default function ModalEditService({
                           color="success"
                           variant="light"
                           startContent={<CopyDocumentIcon />}
-                          onPress={(e) =>
-                            handleChange("operNonAis", formData.operAis, "")
-                          }
+                          onPress={(e) => {
+                            const value = { ...formData.operAis };
+                            value.oper = "non-AIS";
+                            value.state = undefined;
+                            handleChange("operNonAis", value, "");
+                          }}
                         >
                           Clone AIS Operation
                         </Button>
@@ -1059,9 +1062,12 @@ export default function ModalEditService({
                           color="success"
                           variant="light"
                           startContent={<CopyDocumentIcon />}
-                          onPress={(e) =>
-                            handleChange("operInter", formData.operAis, "")
-                          }
+                          onPress={(e) => {
+                            const value = { ...formData.operAis };
+                            value.oper = "INTER";
+                            value.state = undefined;
+                            handleChange("operInter", value, "");
+                          }}
                         >
                           Clone AIS Operation
                         </Button>

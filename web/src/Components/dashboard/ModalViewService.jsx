@@ -37,7 +37,7 @@ export default function ModalViewService({ isOpen, onClose, service }) {
                         className="w-full"
                         hideSymbol
                       >
-                        <div className="w-full whitespace-pre-wrap break-words">
+                        <div className="view-service w-full whitespace-pre-wrap break-words">
                           {JSON.stringify(convertServiceJson(service), null, 2)}
                         </div>
                       </Snippet>
